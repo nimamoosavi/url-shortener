@@ -112,7 +112,7 @@ public interface JdbcService<T, I extends Serializable> extends GeneralRepositor
      * @param tList the list of Entity that you must save it in Data base
      * @apiNote this method used SpringJpa
      */
-    void saveAll(List<T> tList);
+    List<T> saveAll(List<T> tList);
 
     /**
      * @param id the incrementalId of database Object

@@ -13,4 +13,9 @@ public interface KeyGeneration {
      * @apiNote this methode used for get and store some short keys in memory and return it fast
      */
     String getKey();
+
+    /**
+     * @apiNote this service Use for save used Keys
+     */
+    void saveUsedKey(String key);
 }

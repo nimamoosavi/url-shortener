@@ -55,7 +55,7 @@ public class ShortenerLinkController {
 
     /**
      * @param shortLink is the short reference that was created before
-     * @return (@ { @ link Ratio } is an object that show the ration detail,
+     * @return {@link Ratio}{@link String} is an object that show the ration detail,
      * @apiNote this method use for getting the ratio count
      */
     @GetMapping(FETCH_RATIO)

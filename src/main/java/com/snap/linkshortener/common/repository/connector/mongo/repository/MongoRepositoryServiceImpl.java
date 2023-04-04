@@ -73,8 +73,8 @@ public abstract class MongoRepositoryServiceImpl<T, I extends Serializable> impl
      * @param ts List of T for create documents
      */
     @Override
-    public void saveAll(List<T> ts) {
-        repository.insert(ts);
+    public List<T> saveAll(List<T> ts) {
+        return repository.insert(ts);
     }
 
 

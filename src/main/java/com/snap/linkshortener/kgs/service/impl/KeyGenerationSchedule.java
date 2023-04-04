@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -52,8 +53,13 @@ public final class KeyGenerationSchedule {
         for (int i = 0; i < count; i++) {
             keys.add(generateRandomKey(KEY_COUNT_DEFAULT));
         }
-        store(keys);
-        generatedKeys.addAll(keys);
+        var storedKey = store(keys);
+
+        var readyKeys = storedKey.stream()
+                .map(Keys::getKey)
+                .collect(Collectors.toList());
+
+        generatedKeys.addAll(readyKeys);
     }
 
     /**
@@ -65,18 +71,18 @@ public final class KeyGenerationSchedule {
         return RandomStringUtils.randomAlphanumeric(count);
     }
 
-    private void store(Set<String> keys) {
+    private List<Keys> store(Set<String> keys) {
         var entities = new ArrayList<Keys>(keys.size());
         keys.forEach(shortKey -> {
             var entity = generateEntity(shortKey);
             entities.add(entity);
         });
-        keysJdbcService.saveAll(entities);
+        return keysJdbcService.saveAll(entities);
     }
 
 
     /**
-     * @apiNote this method run Schedule for check the in memory list and if its empty or diagnoses to increase , start to increase it
+     * @apiNote this method runs Schedule for check the in memory list, and if its empty or diagnoses to increase, start to increase it
      */
     @Scheduled(fixedDelay = SCHEDULER_DURATION_MILLISECONDS)
     private void checkKeyListsSchedule() {

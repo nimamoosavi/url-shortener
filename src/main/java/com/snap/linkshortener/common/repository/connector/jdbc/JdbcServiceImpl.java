@@ -39,8 +39,8 @@ public abstract class JdbcServiceImpl<T, I extends Serializable> implements Jdbc
     }
 
     @Override
-    public void saveAll(List<T> tList) {
-        jdbcRepository.saveAll(tList);
+    public List<T> saveAll(List<T> tList) {
+        return jdbcRepository.saveAll(tList);
     }
 
     @Override

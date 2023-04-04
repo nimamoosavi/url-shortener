@@ -13,7 +13,6 @@ import static lombok.AccessLevel.PROTECTED;
 @Table(name = "USED_KEYS")
 @Setter
 @Getter
-@NoArgsConstructor(access = PROTECTED)
 public final class UsedKeys {
 
     @Id

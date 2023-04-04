@@ -1,6 +1,7 @@
 package com.snap.linkshortener.app.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snap.linkshortener.app.service.LinkService;
 import com.snap.linkshortener.app.web.model.ShorterLink;
 import org.apache.catalina.User;
 import org.apache.catalina.realm.UserDatabaseRealm;
@@ -8,6 +9,7 @@ import org.apache.catalina.users.MemoryUserDatabase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -23,6 +25,9 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {ShortenerLinkController.class})
 @ExtendWith(SpringExtension.class)
 class ShortenerLinkControllerTest {
+
+    @MockBean
+    private LinkService linkService;
 
     @Autowired
     private ShortenerLinkController shortenerLinkController;
@@ -70,6 +75,18 @@ class ShortenerLinkControllerTest {
     @Test
     void testGetOriginalLink() throws Exception {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/");
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(shortenerLinkController)
+                .build()
+                .perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(500));
+    }
+
+    /**
+     * Method under test: {@link ShortenerLinkController#getShortLinRatio(String)}
+     */
+    @Test
+    void testGetShortLinRatio() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/ratio/");
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(shortenerLinkController)
                 .build()
                 .perform(requestBuilder);

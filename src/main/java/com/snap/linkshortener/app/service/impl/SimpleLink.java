@@ -28,7 +28,7 @@ public class SimpleLink implements LinkService {
     private String baseUrl;
 
     @Override
-    public ShorterLink generateShortLink(String originalUrl) {
+    public final ShorterLink generateShortLink(String originalUrl) {
         var shortKey = simpleKeyGeneration.getKey();
 
         var shortUrl = baseUrl + shortKey;
@@ -39,11 +39,13 @@ public class SimpleLink implements LinkService {
         model.setExpirationTime(LocalDateTime.now().plusMonths(1));
         store(model);
 
+        storeUsedKey(shortKey);
+
         return new ShorterLink(shortKey, model.getExpirationTime());
     }
 
     @Override
-    public String getOriginalLink(String shortLink) {
+    public final String getOriginalLink(String shortLink) {
 
         var link = findOriginalLink(shortLink);
 
@@ -57,7 +59,7 @@ public class SimpleLink implements LinkService {
 
 
     @Override
-    public Ratio getShortLinkratio(String shortLink) {
+    public final Ratio getShortLinkratio(String shortLink) {
         var link = linkRepository.findByShortLink(shortLink);
         return link.map(links -> new Ratio(links.getOriginalLink()
                         , links.getShortLink()
@@ -67,7 +69,7 @@ public class SimpleLink implements LinkService {
 
 
     /**
-     * @apiNote this method for cache data for better performance in redis and u can find the configuration
+     * @apiNote this method for cache data for better performance in redis, and you can find the configuration
      * in {@link com.snap.linkshortener.app.config.Configuration}
      */
     @Cacheable(cacheNames = CACHE_MANAGER_NAME, key = "#shortLink", unless = "#result == null")
@@ -78,13 +80,23 @@ public class SimpleLink implements LinkService {
 
 
     /**
-     * @apiNote this method called asynchronous, and you can find the config in {@link com.snap.linkshortener.app.config.Configuration}
+     * @apiNote this method called asynchronous, and you can find the config in
+     * {@link com.snap.linkshortener.app.config.Configuration}
      */
     @Async("rateThreadPoolTaskExecutor")
     public void increaseRate(Links link) {
         var newRate = link.getRate() + 1;
         link.setRate(newRate);
         linkRepository.update(link);
+    }
+
+    /**
+     * @apiNote this method called asynchronous and store the used key in key Generation Service
+     * {@link com.snap.linkshortener.app.config.Configuration}
+     */
+    @Async("rateThreadPoolTaskExecutor")
+    public void storeUsedKey(String key) {
+        simpleKeyGeneration.saveUsedKey(key);
     }
 
     private void store(LinkModel link) {

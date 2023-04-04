@@ -33,7 +33,7 @@ public interface GeneralRepository<T, I extends Serializable> {
      * @param tList the list of Entity that you must save it in Data base
      * @apiNote used for save the batch of Data in Data base
      */
-    void saveAll(List<T> tList);
+    List<T> saveAll(List<T> tList);
 
 
     /**
