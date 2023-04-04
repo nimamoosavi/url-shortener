@@ -1,0 +1,71 @@
+server:
+  port: 80
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+  tomcat:
+    connection-timeout: 20s
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: short-link
+    redis:
+      repositories:
+        enabled: off
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 400
+      idle-timeout: 600000 # 10min
+      connection-timeout: 1000 #1sec
+      pool-name: SpringBootJPAHikariCP
+      connection-test-query: select 1 from dual
+  jpa:
+    properties:
+      hibernate:
+        order_insert: true
+        order_updates: true
+        jdbc:
+          batch_size: 50
+    hibernate:
+      ddl-auto: validate
+    database: mysql
+    open-in-view: false
+  cache:
+    type: redis
+  flyway:
+    baseline-on-migrate: true
+    table: FLYWAY_SCHEMA_HISTORY
+    enabled: true
+    out-of-order: true
+  jackson:
+    default-property-inclusion: non_null
+    deserialization:
+      READ_UNKNOWN_ENUM_VALUES_AS_NULL: true
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+    serialization:
+      write-dates-as-timestamps: false
+      FAIL_ON_EMPTY_BEANS: false
+  task:
+    execution:
+      pool:
+        core-size: 15
+        max-size: 30
+      thread-name-prefix: "snap-trip-"
+  security:
+    filter:
+      order: 5
+  servlet:
+    multipart:
+      max-file-size: 5MB
+  web:
+    locale: fa
+  mvc:
+    async:
+      request-timeout: 20s
