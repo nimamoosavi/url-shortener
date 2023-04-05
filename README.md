@@ -5,6 +5,10 @@ It implements a full set of base operations to Create a short link, fetch, and U
 Currently, it works with JPA databases in the Jdbc project and MongoDB project,
 but you can expand it to work with other databases.
 And you must implement and expand the common folder and general repository implementation
+
+![ShortLink Diagram](https://github.com/nimamoosavi/url-shortener/wiki/images/link-shortener.jpg)
+
+
 ### Requirements
 The library works with Java 11+ and spring boot version 2.7 and higher
 Service Requirement: redis, mysql or another rdbms database, mongodb service
